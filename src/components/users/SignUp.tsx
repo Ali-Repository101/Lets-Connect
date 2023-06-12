@@ -1,11 +1,10 @@
-import './style.scss'
 const SignUp = () => {
     return (
         <>
             {/* Signup Form */}
             <div className="form signup">
                 <div className="form-content">
-                    <header>Signup</header>
+                    <header>Signup form</header>
                     <form action="#">
                         <div className="field input-field">
                             <input type="email" placeholder="Email" className="input" />
