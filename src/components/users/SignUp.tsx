@@ -11,6 +11,7 @@ const SignUp = () => {
     const handleChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             setUserSignUp({ ...userSignUp, [e.target.name]: e.target.value })
+            //test
         }
     }
     return (
