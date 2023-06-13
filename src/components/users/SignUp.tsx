@@ -1,6 +1,18 @@
-import { Link } from "react-router-dom"
+import react, { useState } from 'react';
+import { Link } from "react-router-dom";
 import './style.scss'
+import { Input, Button } from 'reactstrap';
+//react-icons
+import { FcGoogle } from 'react-icons/fc';
+import { MdEmail } from 'react-icons/md';
 const SignUp = () => {
+    const [userSignUp, setUserSignUp] = useState({});
+    console.log("signup", userSignUp)
+    const handleChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value) {
+            setUserSignUp({ ...userSignUp, [e.target.name]: e.target.value })
+        }
+    }
     return (
         <>
             {/* Signup Form */}
@@ -10,20 +22,29 @@ const SignUp = () => {
                         <header>Signup form</header>
                         <form action="#">
                             <div className="field input-field">
-                                <input type="email" placeholder="Email" className="input" />
-                            </div>
-                            <div className="field input-field">
-                                <input
-                                    type="password"
-                                    placeholder="Create password"
-                                    className="password"
+                                <Input type="email"
+                                    placeholder="Email"
+                                    name='email'
+                                    className="input"
+                                    onChange={handleChangeLogin}
                                 />
                             </div>
                             <div className="field input-field">
-                                <input
+                                <Input
                                     type="password"
+                                    name='password'
+                                    placeholder="Create password"
+                                    className="password"
+                                    onChange={handleChangeLogin}
+                                />
+                            </div>
+                            <div className="field input-field">
+                                <Input
+                                    type="password"
+                                    name='confirmPassword'
                                     placeholder="Confirm password"
                                     className="password"
+                                    onChange={handleChangeLogin}
                                 />
                                 <i className="bx bx-hide eye-icon" />
                             </div>
@@ -33,7 +54,7 @@ const SignUp = () => {
                         </form>
                         <div className="form-link">
                             <span>
-                                Already have an account?{" "}
+                                Already have an account?
                                 <Link to={'login'} className="link login-link">
                                     Login
                                 </Link>
@@ -42,16 +63,16 @@ const SignUp = () => {
                     </div>
                     <div className="line" />
                     <div className="media-options">
-                        <a href="#" className="field facebook">
-                            <i className="bx bxl-facebook facebook-icon" />
-                            <span>Login with Facebook</span>
-                        </a>
+                        <Button outline className="field facebook">
+                            <FcGoogle />
+                            <span>Login with Google</span>
+                        </Button>
                     </div>
                     <div className="media-options">
-                        <a href="#" className="field google">
-                            <img src="#" alt="" className="google-img" />
-                            <span>Login with Google</span>
-                        </a>
+                        <Button outline className="field google">
+                            <MdEmail />
+                            <span>Sign in with existing account</span>
+                        </Button>
                     </div>
                 </div>
             </section>
