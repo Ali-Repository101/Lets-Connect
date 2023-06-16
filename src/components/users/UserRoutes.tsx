@@ -3,11 +3,12 @@ import { Suspense, lazy, useState, useEffect } from "react"
 import Loader from "../Loader"
 const Login = lazy(() => import("./Login"))
 const SignUp = lazy(() => import("./SignUp"))
+const DashBoard = lazy(() => import("../DashBoard/DashBoard"))
 const UserRoutes = () => {
     const [loading, setLoading] = useState(true)
     console.log("loading-------------", loading)
     useEffect(() =>{
-        setTimeout(loader, 3000)
+        setTimeout(loader, 1000)
     }, [])
     const loader = () => {
         setLoading(false)
@@ -17,10 +18,15 @@ const UserRoutes = () => {
     } else {
         <SignUp/>
     }
-    const router = createBrowserRouter([{
-        path: 'login',
-        element: <Suspense fallback={<><p>Loading.....</p></>}><Login /></Suspense>
-    }, {
+    const router = createBrowserRouter([
+        {
+            path: 'dashboard',
+            element: <Suspense fallback={<><p>Loading.....</p></>}><DashBoard /></Suspense>
+        },
+        {
+            path: 'login',
+            element: <Suspense fallback={<><p>Loading.....</p></>}><Login /></Suspense>
+        }, {
         path: '/',
         element: <Suspense fallback={<><p>Loading.......</p></>}><SignUp /></Suspense>
     }
