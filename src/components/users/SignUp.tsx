@@ -2,41 +2,55 @@ import react, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import './style.scss'
 import { Input, Button, UncontrolledAlert } from 'reactstrap';
+import axios from "axios";
+import { userName } from './userSlice/userSlice';
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
+import { useDispatch } from 'react-redux';
+import { useGoogleLogin } from '@react-oauth/google';
+import jwt_decode from "jwt-decode";
 const SignUp = () => {
+    const dispatch = useDispatch()
     const [userSignUp, setUserSignUp] = useState<any>({});
     const [message, setMessage] = useState<any>()
     const [show, setShow] = useState<boolean>(false)
-    console.log("signup", userSignUp)
+
+
     const handleChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             setUserSignUp({ ...userSignUp, [e.target.name]: e.target.value })
         }
     }
-    const handleSubmit = (e: any) => {
-        e.preventDefault()
+    const handleSubmit = async () => {
+        // e.preventDefault()
         const { name, email, password, confirmPassword } = userSignUp
         setShow(true)
-        console.log("destructuredData-------", name, email, password, confirmPassword,)
-        fetch("http://localhost:8000/api/user/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "applic  ation/json",
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({
+        const apiPostData = await axios.post("http://localhost:8000/api/user/register", {
                 name: name,
                 email: email,
                 password: password,
                 password_confirmaton: confirmPassword
-            })
-        }).then((res) => res.json())
-            .then((data) =>
-                setMessage(data.message))
+        })
+        setMessage(apiPostData.data.message)
     }
+
+    const loginGoogle = useGoogleLogin({
+        onSuccess: async tokenResponse => {
+            const userInfo = await axios
+                .get('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+                })
+                .then(res => res.data);
+
+            setUserSignUp({ ...userSignUp, name: userInfo.name, email: userInfo.email, password: '567890875444', confirmPassword: '567890875444' });
+        },
+
+    });
+
+    useEffect(() => {
+        handleSubmit()
+    }, [userSignUp])
     return (
         <>
             {/* Signup Form */}
@@ -89,7 +103,7 @@ const SignUp = () => {
                                 <i className="bx bx-hide eye-icon" />
                             </div>
                             <div className="field button-field">
-                                <Link to="/"> <Button >SignUp</Button></Link>
+                                <Link to="dashboard"> <Button >SignUp</Button></Link>
                             </div>
                         </form>
                         <div className="form-link">
@@ -103,7 +117,7 @@ const SignUp = () => {
                     </div>
                     <div className="line" />
                     <div className="media-options">
-                        <Button outline className="field facebook">
+                        <Button outline className="field facebook" onClick={() => { loginGoogle() }}>
                             <FcGoogle />
                             <span>Login with Google</span>
                         </Button>
