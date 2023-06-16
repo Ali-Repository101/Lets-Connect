@@ -1,11 +1,11 @@
 import { createBrowserRouter, RouterProvider, Outlet, } from "react-router-dom"
 import { Suspense, lazy, useState, useEffect } from "react"
 import Loader from "../Loader"
+import Createworkspace from "./Createworkspace"
 const Login = lazy(() => import("./Login"))
 const SignUp = lazy(() => import("./SignUp"))
 const UserRoutes = () => {
     const [loading, setLoading] = useState(true)
-    console.log("loading-------------", loading)
     useEffect(() =>{
         setTimeout(loader, 3000)
     }, [])
@@ -23,6 +23,9 @@ const UserRoutes = () => {
     }, {
         path: '/',
         element: <Suspense fallback={<><p>Loading.......</p></>}><SignUp /></Suspense>
+        }, {
+        path: '/workspace',
+            element: <Suspense><Createworkspace/></Suspense>
     }
     ])
 

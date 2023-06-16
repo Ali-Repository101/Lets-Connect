@@ -2,6 +2,7 @@ import react, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import './style.scss'
 import { Input, Button, UncontrolledAlert } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
@@ -10,21 +11,21 @@ const SignUp = () => {
     const [message, setMessage] = useState<any>()
     const [show, setShow] = useState<boolean>(false)
     console.log("signup", userSignUp)
+    const navigate = useNavigate()
     const handleChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             setUserSignUp({ ...userSignUp, [e.target.name]: e.target.value })
         }
-    }
-    const handleSubmit = (e: any) => {
+    }   
+    const handleSubmit = async(e: any) => {
         e.preventDefault()
         const { name, email, password, confirmPassword } = userSignUp
         setShow(true)
-        console.log("destructuredData-------", name, email, password, confirmPassword,)
-        fetch("http://localhost:8000/api/user/register", {
+       await fetch("http://localhost:8000/api/user/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Accept: "applic  ation/json",
+                Accept: "application/json",
                 "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify({
@@ -35,8 +36,21 @@ const SignUp = () => {
             })
         }).then((res) => res.json())
             .then((data) =>
-                setMessage(data.message))
+                // console.log("data", data))
+                localStorage.setItem("userInfo", JSON.stringify(data))).catch(error => {
+                    console.log("error", error.response.data.message)
+                })
+                // setMessage(data.message))
+                // setMessage(data.message))
+                const userInfo = localStorage.getItem("userInfo")
+        console.log("userInfo", userInfo)
+        if (userInfo) {
+            navigate('/login')
+        } else {
+            navigate('/')
+        }
     }
+    
     return (
         <>
             {/* Signup Form */}
@@ -52,7 +66,7 @@ const SignUp = () => {
                 <div className="form signup">
                     <div className="form-content">
                         <header>Signup form</header>
-                        <form onClick={handleSubmit}>
+                        <form >
                             <div className="field input-field">
                                 <Input type="text"
                                     placeholder="Name"
@@ -89,7 +103,7 @@ const SignUp = () => {
                                 <i className="bx bx-hide eye-icon" />
                             </div>
                             <div className="field button-field">
-                                <Link to="/"> <Button >SignUp</Button></Link>
+                                <Link to="/"> <Button onClick={handleSubmit}>SignUp</Button></Link>
                             </div>
                         </form>
                         <div className="form-link">
