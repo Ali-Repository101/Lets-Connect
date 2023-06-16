@@ -50,16 +50,21 @@ const Login = () => {
                                 </a>
                             </div>
                             <div className="field button-field">
-                                <Button onClick={handleLogin}>Login</Button>
-                            </div>
+                                <Link to=""> <Button onClick={handleLogin}>Login</Button></Link>
+                            </div>  
                         </form>
                         <div className="form-link">
-                            <span>
-                                Don't have an account?
-                                <Link to="/" className="link signup-link">
-                                    Signup
-                                </Link>
-                            </span>
+                            <div className='d-flex justify-content-center align-items-center'>
+                                <span>
+                                    Don't have an account?
+                                </span>
+                                <span>
+                                    <Link to="/" className="link signup-link">
+                                        Signup
+                                    </Link>
+                                </span>
+                            </div>
+
                         </div>
                     </div>
                     <div className="line" />
