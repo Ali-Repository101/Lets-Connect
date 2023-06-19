@@ -5,9 +5,12 @@ import { Button, Input } from 'reactstrap';
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
 import { Link } from "react-router-dom"
+import {UncontrolledAlert} from 'reactstrap'
 
 const Login = () => {
-    const [userLogin, setUserLogin] = useState({});
+    const [userLogin, setUserLogin] = useState<any>({});
+    const [show, setShow] = useState<boolean>(false)
+    const [message, setMessage] = useState<any>()
     console.log("login", userLogin)
     const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
@@ -18,14 +21,42 @@ const Login = () => {
     const handleLogin = () => {
         console.log("value")
     }
+    const handleLoginSubmit = (e:any) => {
+        e.preventDefault()
+        setShow(true)
+        const { Email, password } = userLogin
+        fetch("http://localhost:8000/api/user/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "applic  ation/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify({
+                email: Email,
+                password: password,
+            })
+        }).then((res) => res.json())
+            .then((data) =>
+            // setMessage(data.message))
+                console.log("data",data))
+
+    }
 
     return (
         <>
+            <div className='show'>
+        {show &&
+            <UncontrolledAlert color="info">
+                {message}
+            </UncontrolledAlert>
+        }
+    </div>
             <section className="container-fluid forms">
                 <div className="form login">
                     <div className="form-content">
                         <header>Login</header>
-                        <form action="#">
+                        <form onClick={handleLoginSubmit}>
                             <div className="field input-field">
                                 <Input
                                     type="email"

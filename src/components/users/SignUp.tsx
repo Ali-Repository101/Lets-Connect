@@ -4,6 +4,7 @@ import './style.scss'
 import { Input, Button, UncontrolledAlert } from 'reactstrap';
 import axios from "axios";
 import { userName } from './userSlice/userSlice';
+import { useNavigate } from 'react-router-dom';
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
@@ -27,10 +28,10 @@ const SignUp = () => {
         const { name, email, password, confirmPassword } = userSignUp
         setShow(true)
         const apiPostData = await axios.post("http://localhost:8000/api/user/register", {
-                name: name,
-                email: email,
-                password: password,
-                password_confirmaton: confirmPassword
+            name: name,
+            email: email,
+            password: password,
+            password_confirmaton: confirmPassword
         })
         setMessage(apiPostData.data.message)
     }
@@ -66,7 +67,7 @@ const SignUp = () => {
                 <div className="form signup">
                     <div className="form-content">
                         <header>Signup form</header>
-                        <form onClick={handleSubmit}>
+                        <form >
                             <div className="field input-field">
                                 <Input type="text"
                                     placeholder="Name"
