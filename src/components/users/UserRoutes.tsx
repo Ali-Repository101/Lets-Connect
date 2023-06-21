@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider, Outlet, } from "react-router-dom"
 import { Suspense, lazy, useState, useEffect } from "react"
-import Loader from "../Loader"
+import Loader from "../Loader/Loader"
 import Createworkspace from "./Createworkspace"
 const Login = lazy(() => import("./Login"))
 const SignUp = lazy(() => import("./SignUp"))

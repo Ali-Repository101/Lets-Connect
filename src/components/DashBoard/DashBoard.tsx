@@ -1,7 +1,10 @@
+import './dashbBoard.scss'
+import NavbarSection from "./Navbar"
+
 const DashBoard = () => {
     return (
         <>
-            <h1>DashBoard Page</h1>
+            <NavbarSection />
         </>
     )
 }

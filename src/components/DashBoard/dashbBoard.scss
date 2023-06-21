@@ -1,0 +1,130 @@
+.master-div {
+
+    .workspace {
+        .workspace-name {
+            color: #fff;
+            background-color: #212529;
+            border: 5 px solid white;
+        }
+
+        .workspace-dropdown {
+            background-color: hsla(0, 0%, 100%, .2);
+
+            .workspace-item {
+                color: #fff !important;
+                padding: 8px 16px;
+                display: flex;
+                align-items: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        }
+
+        .workspace-dropdown :hover {
+            background-color: rgba(0, 0, 0, .85);
+        }
+
+    }
+
+    .user-profile {
+        .profile-name {
+            color: #fff;
+            background-color: #212529;
+            border: none
+        }
+
+        .profile-dropdown {
+            height: 40px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            padding: 0 16px;
+            overflow: hidden;
+            line-height: 40px;
+            text-overflow: ellipsis;
+            background-color: #fff;
+        }
+
+        .profile-dropdown:hover {
+            color: #1890ff;
+        }
+
+        .active-profile {
+            color: #1890ff;
+        }
+    }
+
+    .main-image {
+        background-image: url('https://images.unsplash.com/photo-1490672007259-6065fe48cf05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1510&q=80');
+        width: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 92vh;
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            // padding: 60px;
+
+            .inner-main {
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                min-height: 600px;
+
+                .image-logo {
+                    height: 100px;
+                    width: 200px;
+                    margin-top: 20px;
+                    right: 0;
+                    bottom: 0;
+                }
+
+                .open-voice-ping {
+                    margin-top: 80px;
+                    padding: 13px 100px;
+                }
+
+                .dont-voice-ping {
+                    font-size: 15px;
+                    color: #929298;
+                    margin-top: 31px;
+                }
+
+                .download-link {
+                    color: #3b67fe;
+                    font-size: 15px;
+                    font-weight: 700;
+                    cursor: pointer;
+                }
+
+            }
+        }
+
+
+        .chat-backround {
+            background-color: rgb(0, 113, 178) !important;
+            height: 45px;
+            width: 5px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 25px;
+            right: 24px;
+            padding: 0px 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .chat-help-section {
+                color: white;
+                font-size: 25px;
+            }
+        }
+    }
+}
