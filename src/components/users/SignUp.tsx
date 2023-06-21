@@ -10,7 +10,6 @@ import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useGoogleLogin } from '@react-oauth/google';
-import jwt_decode from "jwt-decode";
 const SignUp = () => {
     const dispatch = useDispatch()
     const [userSignUp, setUserSignUp] = useState<any>({});
@@ -34,6 +33,8 @@ const SignUp = () => {
             password_confirmaton: confirmPassword
         })
         setMessage(apiPostData.data.message)
+        // console.log("apiPostData-----", apiPostData),
+        localStorage.setItem("token",JSON.stringify(apiPostData.data.token))
     }
 
     const loginGoogle = useGoogleLogin({
@@ -49,9 +50,9 @@ const SignUp = () => {
 
     });
 
-    useEffect(() => {
-        handleSubmit()
-    }, [userSignUp])
+    // useEffect(() => {
+    //     handleSubmit()
+    // }, [userSignUp])
     return (
         <>
             {/* Signup Form */}
@@ -104,7 +105,7 @@ const SignUp = () => {
                                 <i className="bx bx-hide eye-icon" />
                             </div>
                             <div className="field button-field">
-                                <Link to="dashboard"> <Button >SignUp</Button></Link>
+                                <Link to="dashboard"> <Button onClick={handleSubmit}>SignUp</Button></Link>
                             </div>
                         </form>
                         <div className="form-link">

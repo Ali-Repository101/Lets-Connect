@@ -5,6 +5,7 @@ import Createworkspace from "./Createworkspace"
 const Login = lazy(() => import("./Login"))
 const SignUp = lazy(() => import("./SignUp"))
 const DashBoard = lazy(() => import("../DashBoard/DashBoard"))
+const CreateNewPassword = lazy(() => import("./CreateNewPassword"))
 const UserRoutes = () => {
     const [loading, setLoading] = useState(true)
     useEffect(() =>{
@@ -32,6 +33,9 @@ const UserRoutes = () => {
         }, {
         path: '/workspace',
             element: <Suspense><Createworkspace/></Suspense>
+        }, {
+            path: '/createnewpassword',
+            element: <Suspense fallback={<><p>Loading...........</p></>}><CreateNewPassword/></Suspense>
     }
     ])
 
