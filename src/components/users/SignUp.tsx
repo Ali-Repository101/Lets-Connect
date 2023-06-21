@@ -1,22 +1,21 @@
 import react, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './style.scss'
 import { Input, Button, UncontrolledAlert } from 'reactstrap';
 import axios from "axios";
 import { userName } from './userSlice/userSlice';
-import { useNavigate } from 'react-router-dom';
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useGoogleLogin } from '@react-oauth/google';
-import jwt_decode from "jwt-decode";
 const SignUp = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
     const [userSignUp, setUserSignUp] = useState<any>({});
+    console.log("userSignip out", userSignUp)
     const [message, setMessage] = useState<any>()
-    const [show, setShow] = useState<boolean>(false)
-
+    const [show, setShow] = useState<boolean>(false);
 
     const handleChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
@@ -24,9 +23,9 @@ const SignUp = () => {
         }
     }
     const handleSubmit = async () => {
+        console.log("userSignip in", userSignUp)
         // e.preventDefault()
         const { name, email, password, confirmPassword } = userSignUp
-        setShow(true)
         const apiPostData = await axios.post("http://localhost:8000/api/user/register", {
             name: name,
             email: email,
@@ -34,6 +33,15 @@ const SignUp = () => {
             password_confirmaton: confirmPassword
         })
         setMessage(apiPostData.data.message)
+        setShow(true)
+        //navigate to dashboard
+        if (name && email && password && confirmPassword) {
+            if (password === confirmPassword && apiPostData.data.status != 'failed') {
+                setTimeout(() => {
+                    navigate('/dashboard')
+                }, 3000)
+            }
+        }
     }
 
     const loginGoogle = useGoogleLogin({
@@ -43,21 +51,27 @@ const SignUp = () => {
                     headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
                 })
                 .then(res => res.data);
+            if (userInfo.name && userInfo.email) {
+                setUserSignUp({ ...userSignUp, name: userInfo.name, email: userInfo.email, password: 'test875444@#wer', confirmPassword: '567890875444@#wer' });
+                handleSubmit()
+            }
 
-            setUserSignUp({ ...userSignUp, name: userInfo.name, email: userInfo.email, password: '567890875444', confirmPassword: '567890875444' });
         },
 
     });
 
+
     useEffect(() => {
+        if (userSignUp.name && userSignUp.email && userSignUp.password && userSignUp.confirmPassword)
         handleSubmit()
     }, [userSignUp])
+
     return (
         <>
             {/* Signup Form */}
             <div className='show'>
                 {show &&
-                    <UncontrolledAlert color="info">
+                    <UncontrolledAlert color="danger">
                         {message}
                     </UncontrolledAlert>
                 }
@@ -67,7 +81,7 @@ const SignUp = () => {
                 <div className="form signup">
                     <div className="form-content">
                         <header>Signup form</header>
-                        <form >
+                        <form>
                             <div className="field input-field">
                                 <Input type="text"
                                     placeholder="Name"
@@ -104,7 +118,7 @@ const SignUp = () => {
                                 <i className="bx bx-hide eye-icon" />
                             </div>
                             <div className="field button-field">
-                                <Link to="dashboard"> <Button >SignUp</Button></Link>
+                                <Button onClick={handleSubmit}>SignUp</Button>
                             </div>
                         </form>
                         <div className="form-link">
