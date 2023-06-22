@@ -9,14 +9,21 @@ import {
     UncontrolledDropdown,
     Button
 } from 'reactstrap';
+
 import { BsFillChatRightFill } from 'react-icons/bs'
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
 import IntercomWidget from './IntercomWidget';
-
+import { useNavigate } from 'react-router-dom';
 function NavbarSection(props: any) {
     const profileList = [' Open VoicePing App', ' View DashBoard', 'Change Password', 'Sign Out'];
     const [activeProfile, setActiveProfile] = useState<number>();
+    const navigate = useNavigate()
+    console.log("activeProfile------", activeProfile)
     const [openChat, setOpenChat] = useState(false)
+    if (activeProfile === 2) {
+        navigate('/changePassword')
+    }
+   
     return (
         <div className='master-div'>
             <Navbar
@@ -55,7 +62,7 @@ function NavbarSection(props: any) {
                         >
                             <span className='me-2'>
                                 <img className='me-3' src='https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png' height={50} width={50} />
-                                Brock Lesner
+                                {props.userName}
                             </span>
 
                         </DropdownToggle>
@@ -75,7 +82,7 @@ function NavbarSection(props: any) {
                 <div className='container'>
                     <div className='inner-main'>
                         <img src={logo} alt='logo' className='image-logo' />
-
+                          
                         <Button
                             color="primary"
                             className='open-voice-ping'

@@ -3,12 +3,31 @@ import { Link, useNavigate } from "react-router-dom";
 import './style.scss'
 import { Input, Button, UncontrolledAlert } from 'reactstrap';
 import axios from "axios";
+import { FormikHelpers, useFormik } from 'formik'
 import { userName } from './userSlice/userSlice';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useGoogleLogin } from '@react-oauth/google';
+interface Values {
+   Name: string;
+    lastName: string;
+    email: string;
+}
+const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+    lastName: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
+});
 const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -22,6 +41,7 @@ const SignUp = () => {
             setUserSignUp({ ...userSignUp, [e.target.name]: e.target.value })
         }
     }
+
     const handleSubmit = async () => {
         console.log("userSignip in", userSignUp)
         // e.preventDefault()
@@ -33,6 +53,7 @@ const SignUp = () => {
             password_confirmaton: confirmPassword
         })
         setMessage(apiPostData.data.message)
+        localStorage.setItem('token', JSON.stringify(apiPostData.data.token))
         setShow(true)
         //navigate to dashboard
         if (name && email && password && confirmPassword) {
@@ -61,10 +82,11 @@ const SignUp = () => {
     });
 
 
-    useEffect(() => {
-        if (userSignUp.name && userSignUp.email && userSignUp.password && userSignUp.confirmPassword)
-        handleSubmit()
-    }, [userSignUp])
+
+    // useEffect(() => {
+    //     if (userSignUp.name && userSignUp.email && userSignUp.password && userSignUp.confirmPassword)
+    //     handleSubmit()
+    // }, [userSignUp])
 
     return (
         <>
@@ -79,70 +101,79 @@ const SignUp = () => {
             <section className="container-fluid forms">
 
                 <div className="form signup">
-                    <div className="form-content">
-                        <header>Signup form</header>
-                        <form>
-                            <div className="field input-field">
-                                <Input type="text"
-                                    placeholder="Name"
-                                    name='name'
-                                    className="input"
-                                    onChange={handleChangeLogin}
-                                />
-                            </div>
-                            <div className="field input-field">
-                                <Input type="email"
-                                    placeholder="Email"
-                                    name='email'
-                                    className="input"
-                                    onChange={handleChangeLogin}
-                                />
-                            </div>
-                            <div className="field input-field">
-                                <Input
-                                    type="password"
-                                    name='password'
-                                    placeholder="Create password"
-                                    className="password"
-                                    onChange={handleChangeLogin}
-                                />
-                            </div>
-                            <div className="field input-field">
-                                <Input
-                                    type="password"
-                                    name='confirmPassword'
-                                    placeholder="Confirm password"
-                                    className="password"
-                                    onChange={handleChangeLogin}
-                                />
-                                <i className="bx bx-hide eye-icon" />
-                            </div>
-                            <div className="field button-field">
-                                <Button onClick={handleSubmit}>SignUp</Button>
-                            </div>
-                        </form>
-                        <div className="form-link">
-                            <div className='d-flex justify-content-center align-items-center'><span>
-                                Already have an account?</span>
-                                <span><Link to={'login'} className="link login-link">
-                                    Login
-                                </Link></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="line" />
-                    <div className="media-options">
-                        <Button outline className="field facebook" onClick={() => { loginGoogle() }}>
-                            <FcGoogle />
-                            <span>Login with Google</span>
-                        </Button>
-                    </div>
-                    <div className="media-options">
-                        <Button outline className="field google">
-                            <MdEmail />
-                            <span>Sign in with existing account</span>
-                        </Button>
-                    </div>
+                    <Formik
+                        initialValues={{
+                            name: '',
+                            lastName: '',
+                            email: '',
+                        }}
+                        validationSchema={SignupSchema} onSubmit={handleSubmit}>
+                         {({ errors, touched }) => (
+                        <><div className="form-content">
+
+                                <header>Signup form</header>
+
+                                <form>
+                                    <div className="field input-field">
+                                        <Input type="text"
+                                            placeholder="Name"
+                                            name='name'
+                                            className="input"
+                                            onChange={handleChangeLogin} />
+                                    </div>
+                                    {errors.name && touched.name ? (
+                                        <div>{errors.name}</div>
+                                    ) : null}
+                                    <div className="field input-field">
+                                        <Input type="email"
+                                            placeholder="Email"
+                                            name='email'
+                                            className="input"
+                                            onChange={handleChangeLogin} />
+                                    </div>
+                                    <div className="field input-field">
+                                        <Input
+                                            type="password"
+                                            name='password'
+                                            placeholder="Create password"
+                                            className="password"
+                                            onChange={handleChangeLogin} />
+                                    </div>
+                                    <div className="field input-field">
+                                        <Input
+                                            type="password"
+                                            name='confirmPassword'
+                                            placeholder="Confirm password"
+                                            className="password"
+                                            onChange={handleChangeLogin} />
+                                        <i className="bx bx-hide eye-icon" />
+                                    </div>
+                                    <div className="field button-field">
+                                        <Button onClick={handleSubmit}>SignUp</Button>
+                                    </div>
+                                </form>
+                                <div className="form-link">
+                                    <div className='d-flex justify-content-center align-items-center'><span>
+                                        Already have an account?</span>
+                                        <span><Link to={'login'} className="link login-link">
+                                            Login
+                                        </Link></span>
+                                    </div>
+                                </div>
+                            </div><div className="line" /><div className="media-options">
+                                    <Button outline className="field facebook" onClick={() => { loginGoogle(); } }>
+                                        <FcGoogle />
+                                        <span>Login with Google</span>
+                                    </Button>
+                                </div><div className="media-options">
+                                    <Button outline className="field google">
+                                        <MdEmail />
+                                        <span>Sign in with existing account</span>
+                                    </Button>
+                                </div></>
+                            )}
+
+                    </Formik>
                 </div>
             </section>
 
