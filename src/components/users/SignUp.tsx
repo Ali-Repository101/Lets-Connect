@@ -4,6 +4,7 @@ import './style.scss'
 import { Input, Button, UncontrolledAlert } from 'reactstrap';
 import axios from "axios";
 import { userName } from './userSlice/userSlice';
+
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
@@ -20,6 +21,7 @@ const SignUp = () => {
             setUserSignUp({ ...userSignUp, [e.target.name]: e.target.value })
         }
     }
+
     const handleSubmit = async () => {
         // e.preventDefault()
         const { name, email, password, confirmPassword } = userSignUp
@@ -113,8 +115,8 @@ const SignUp = () => {
                         <Link to="/login">
                             <Button outline className="field facebook">
                                 <FcGoogle className='me-3' />
-                            <span>Login with Google</span>
-                        </Button>
+                                <span>Login with Google</span>
+                            </Button>
                         </Link>
                     </div>
                     <div className="media-options d-flex justify-content-center align-items-center">

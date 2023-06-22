@@ -14,7 +14,6 @@ const Login = () => {
     const [userLogin, setUserLogin] = useState<any>({});
     const [show, setShow] = useState<boolean>(false)
     const [message, setMessage] = useState<any>()
-    console.log("login", userLogin)
     const handleChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             setUserLogin({ ...userLogin, [e.target.name]: e.target.value })
@@ -54,10 +53,11 @@ const Login = () => {
                     password: "ertt@12343",
                     password_confirmaton: "ertt@12343"
                 })
+                setMessage(apiPostData.data.message)
                 localStorage.setItem('token', JSON.stringify(apiPostData.data.token))
 
                 //navigate to dashboard
-                if (userInfo.name && userInfo.email) {
+                if (userInfo.name && userInfo.email && apiPostData.data.status != 'failed') {
                     setTimeout(() => {
                         navigate('/dashboard')
                     }, 1000)

@@ -15,7 +15,7 @@ import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
 import IntercomWidget from './IntercomWidget';
 import { useNavigate } from 'react-router-dom';
 
-function DashBoard(props: any) {
+function NavbarSection(props: any) {
     const navigate = useNavigate()
     const profileList = [' Open VoicePing App', ' View DashBoard', 'Change Password', 'Sign Out'];
     const [activeProfile, setActiveProfile] = useState<number>();
@@ -130,4 +130,4 @@ function DashBoard(props: any) {
     );
 }
 
-export default DashBoard;
+export default NavbarSection;
