@@ -1,13 +1,16 @@
 import react, { useState } from 'react'
 import './style.scss'
 import { Button, Input } from 'reactstrap';
+import { useGoogleLogin } from '@react-oauth/google';
+import { Link, useNavigate } from "react-router-dom"
+import { UncontrolledAlert } from 'reactstrap'
+import axios from 'axios'
 //react-icons
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
-import { Link } from "react-router-dom"
-import {UncontrolledAlert} from 'reactstrap'
 
 const Login = () => {
+    const navigate = useNavigate();
     const [userLogin, setUserLogin] = useState<any>({});
     const [show, setShow] = useState<boolean>(false)
     const [message, setMessage] = useState<any>()
@@ -18,30 +21,55 @@ const Login = () => {
         }
     }
 
-    const handleLogin = () => {
-        console.log("value")
-    }
+
     const handleLoginSubmit = (e:any) => {
         e.preventDefault()
         setShow(true)
         const { Email, password } = userLogin
-        fetch("http://localhost:8000/api/user/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "applic  ation/json",
-                "Access-Control-Allow-Origin": "*"
-            },
-            body: JSON.stringify({
-                email: Email,
-                password: password,
-            })
-        }).then((res) => res.json())
-            .then((data) =>
-            // setMessage(data.message))
-                console.log("data",data))
+        axios.post("http://localhost:8000/api/user/login", {
+            email: Email,
+            password: password,
+        })
 
+        if (Email && password) {
+            setTimeout(() => {
+                navigate('/dashboard')
+            }, 1000)
+        }
     }
+
+
+    //google login
+    const loginGoogle = useGoogleLogin({
+        onSuccess: async tokenResponse => {
+            const userInfo = await axios
+                .get('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+                })
+                .then(res => res.data);
+            if (userInfo.name && userInfo.email) {
+                const apiPostData = await axios.post("http://localhost:8000/api/user/register", {
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    password: "ertt@12343",
+                    password_confirmaton: "ertt@12343"
+                })
+                localStorage.setItem('token', JSON.stringify(apiPostData.data.token))
+
+                //navigate to dashboard
+                if (userInfo.name && userInfo.email) {
+                    setTimeout(() => {
+                        navigate('/dashboard')
+                    }, 1000)
+                }
+            }
+
+
+
+        },
+
+
+    });
 
     return (
         <>
@@ -52,7 +80,7 @@ const Login = () => {
             </UncontrolledAlert>
         }
     </div>
-            <section className="container-fluid forms">
+            <section className="container-fluid forms custome-fluid-height">
                 <div className="form login">
                     <div className="form-content">
                         <header>Login</header>
@@ -81,7 +109,7 @@ const Login = () => {
                                 </a>
                             </div>
                             <div className="field button-field">
-                                <Link to=""> <Button onClick={handleLogin}>Login</Button></Link>
+                                <Button>Login</Button>
                             </div>  
                         </form>
                         <div className="form-link">
@@ -99,16 +127,16 @@ const Login = () => {
                         </div>
                     </div>
                     <div className="line" />
-                    <div className="media-options">
-                        <Button outline className="field facebook">
-                            <FcGoogle />
-                            <span>Login with Google</span>
+                    <div className="media-options d-flex justify-content-center align-items-center">
+                        <Button outline className="field facebook" onClick={() => { loginGoogle() }}>
+                            <FcGoogle className='me-3' />
+                            <span>Continue with Google</span>
                         </Button>
                     </div>
-                    <div className="media-options">
-                        <Button outline className="field google">
-                            <MdEmail />
-                            <span>Register</span>
+                    <div className="media-options d-flex justify-content-center align-items-center">
+                        <Button outline className="field google" onClick={() => navigate('/')}>
+                            <MdEmail className='me-3' />
+                            <span>Sign Up</span>
                         </Button>
                     </div>
                 </div>
