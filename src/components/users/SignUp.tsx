@@ -8,12 +8,10 @@ import { userName } from './userSlice/userSlice';
 import { FcGoogle } from 'react-icons/fc';
 import { MdEmail } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { useGoogleLogin } from '@react-oauth/google';
 const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [userSignUp, setUserSignUp] = useState<any>({});
-    console.log("userSignip out", userSignUp)
     const [message, setMessage] = useState<any>()
     const [show, setShow] = useState<boolean>(false);
 
@@ -23,7 +21,6 @@ const SignUp = () => {
         }
     }
     const handleSubmit = async () => {
-        console.log("userSignip in", userSignUp)
         // e.preventDefault()
         const { name, email, password, confirmPassword } = userSignUp
         const apiPostData = await axios.post("http://localhost:8000/api/user/register", {
@@ -32,39 +29,20 @@ const SignUp = () => {
             password: password,
             password_confirmaton: confirmPassword
         })
+        localStorage.setItem('token', JSON.stringify(apiPostData.data.token))
         setMessage(apiPostData.data.message)
         setShow(true)
+
         //navigate to dashboard
         if (name && email && password && confirmPassword) {
             if (password === confirmPassword && apiPostData.data.status != 'failed') {
                 setTimeout(() => {
                     navigate('/dashboard')
-                }, 3000)
+                }, 1000)
             }
         }
     }
 
-    const loginGoogle = useGoogleLogin({
-        onSuccess: async tokenResponse => {
-            const userInfo = await axios
-                .get('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-                })
-                .then(res => res.data);
-            if (userInfo.name && userInfo.email) {
-                setUserSignUp({ ...userSignUp, name: userInfo.name, email: userInfo.email, password: 'test875444@#wer', confirmPassword: '567890875444@#wer' });
-                handleSubmit()
-            }
-
-        },
-
-    });
-
-
-    useEffect(() => {
-        if (userSignUp.name && userSignUp.email && userSignUp.password && userSignUp.confirmPassword)
-        handleSubmit()
-    }, [userSignUp])
 
     return (
         <>
@@ -76,7 +54,7 @@ const SignUp = () => {
                     </UncontrolledAlert>
                 }
             </div>
-            <section className="container-fluid forms">
+            <section className="container-fluid forms custome-fluid-height">
 
                 <div className="form signup">
                     <div className="form-content">
@@ -131,15 +109,17 @@ const SignUp = () => {
                         </div>
                     </div>
                     <div className="line" />
-                    <div className="media-options">
-                        <Button outline className="field facebook" onClick={() => { loginGoogle() }}>
-                            <FcGoogle />
+                    <div className="media-options ">
+                        <Link to="/login">
+                            <Button outline className="field facebook">
+                                <FcGoogle className='me-3' />
                             <span>Login with Google</span>
                         </Button>
+                        </Link>
                     </div>
-                    <div className="media-options">
-                        <Button outline className="field google">
-                            <MdEmail />
+                    <div className="media-options d-flex justify-content-center align-items-center">
+                        <Button outline className="field google" onClick={() => navigate('/login')}>
+                            <MdEmail className='me-3' />
                             <span>Sign in with existing account</span>
                         </Button>
                     </div>
